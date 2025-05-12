@@ -124,10 +124,7 @@ exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   email: 'email',
   name: 'name',
-  username: 'username',
   password: 'password',
-  bio: 'bio',
-  avatarUrl: 'avatarUrl',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -140,17 +137,7 @@ exports.Prisma.BookScalarFieldEnum = {
   coverImageUrl: 'coverImageUrl',
   publicationDate: 'publicationDate',
   genre: 'genre',
-  rating: 'rating',
   ownerId: 'ownerId'
-};
-
-exports.Prisma.ReviewScalarFieldEnum = {
-  id: 'id',
-  content: 'content',
-  rating: 'rating',
-  createdAt: 'createdAt',
-  userId: 'userId',
-  bookId: 'bookId'
 };
 
 exports.Prisma.SortOrder = {
@@ -171,8 +158,7 @@ exports.Prisma.NullsOrder = {
 
 exports.Prisma.ModelName = {
   User: 'User',
-  Book: 'Book',
-  Review: 'Review'
+  Book: 'Book'
 };
 
 /**
