@@ -10,9 +10,11 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { useState, useTransition } from "react";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
-
+import { BeatLoader } from "react-spinners";
+import { register } from "@/actions/register";
 type SignUpFormValues = {
   name: string;
   email: string;
@@ -21,6 +23,10 @@ type SignUpFormValues = {
 };
 
 export function SignUpForm() {
+  const [error, setError] = useState<string | undefined>("");
+  const [success, setSuccess] = useState<string | undefined>("");
+  const [isPending, startTransition] = useTransition();
+
   const form = useForm<SignUpFormValues>({
     defaultValues: {
       name: "",
@@ -31,11 +37,20 @@ export function SignUpForm() {
   });
 
   const onSubmit = (data: SignUpFormValues) => {
+    setError("");
+    setSuccess("");
+
     if (data.password !== data.confirmPassword) {
-      alert("Passwords do not match.");
+      setError("Passwords do not match.");
       return;
     }
-    console.log("Mock signup submit:", data);
+
+    startTransition(() => {
+      register(data).then((res) => {
+        setError(res.error);
+        setSuccess(res.success);
+      });
+    });
   };
 
   return (
@@ -45,7 +60,6 @@ export function SignUpForm() {
           <FormField
             control={form.control}
             name="name"
-            rules={{ required: "Name is required" }}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Full Name</FormLabel>
@@ -59,7 +73,6 @@ export function SignUpForm() {
           <FormField
             control={form.control}
             name="email"
-            rules={{ required: "Email is required" }}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Email</FormLabel>
@@ -73,7 +86,6 @@ export function SignUpForm() {
           <FormField
             control={form.control}
             name="password"
-            rules={{ required: "Password is required" }}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Password</FormLabel>
@@ -87,7 +99,6 @@ export function SignUpForm() {
           <FormField
             control={form.control}
             name="confirmPassword"
-            rules={{ required: "Please confirm your password" }}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Confirm Password</FormLabel>
@@ -98,13 +109,19 @@ export function SignUpForm() {
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full">
-            Create Account
+          <Button type="submit" className="w-full" disabled={isPending}>
+            {isPending ? (
+              <BeatLoader size={10} color="#fff" />
+            ) : (
+              "Create Account"
+            )}
           </Button>
         </form>
       </Form>
 
-      {/* Divider */}
+      {error && <p className="text-sm text-red-500">{error}</p>}
+      {success && <p className="text-sm text-green-600">{success}</p>}
+
       <div className="relative">
         <div className="my-6 h-px w-full bg-gray-300"></div>
         <span className="absolute left-1/2 top-[-12px] -translate-x-1/2 bg-white px-2 text-sm text-muted-foreground">
@@ -112,7 +129,6 @@ export function SignUpForm() {
         </span>
       </div>
 
-      {/* OAuth Buttons */}
       <div className="flex flex-col gap-3">
         <Button variant="outline" className="flex items-center gap-2 w-full">
           <Image src="/google.svg" alt="Google Icon" width={16} height={16} />
