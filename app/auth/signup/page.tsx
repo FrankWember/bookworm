@@ -60,21 +60,21 @@ const SignUpPage = () => {
       <div className="hidden lg:flex flex-1 relative items-center justify-center bg-white">
         {/* Background image */}
         <Image
-          src="/signup2.png"
+          src="/signup.png"
           alt="Book reading illustration"
           layout="fill"
           objectFit="cover"
-          className="absolute inset-0 z-0"
+          className="absolute inset-0 z-0 backdrop-blur-sm brightness-55"
         />
 
         {/* Foreground content */}
         <div
-          className={`relative z-10 flex flex-col items-center h-full p-3 max-w-l justify-center text-center mt-10 ${noto.className}`}
+          className={`relative z-10 flex flex-col items-center h-full p-3 max-w-l justify-center text-center mt-30 ${noto.className}`}
         >
           <h1 className="text-5xl font-bold text-white items-center">
             BOOKWORM
           </h1>
-          <p className="text-white text-xl text-center mt-4">
+          <p className="text-white text-xl text-glow text-center mt-4 ">
             Every story you’ve loved left a mark.
             <br />
             Here, you will meet those who carry the same.

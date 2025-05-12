@@ -64,7 +64,7 @@ const SignInPage = () => {
           alt="Book reading illustration"
           layout="fill"
           objectFit="cover"
-          className="absolute inset-0 z-0"
+          className="absolute inset-0 z-0 brightness-75"
         />
 
         {/* Foreground content */}
