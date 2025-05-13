@@ -12,13 +12,23 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
-
+import { useState, useTransition } from "react";
+import { login } from "@/actions/login";
+import { BeatLoader } from "react-spinners";
+import { useRouter } from "next/navigation";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { ExclamationTriangleIcon, RocketIcon } from "@radix-ui/react-icons";
 type SignInFormValues = {
   email: string;
   password: string;
 };
 
 export function SignInForm() {
+  const [error, setError] = useState<string | undefined>("");
+  const [success, setSuccess] = useState<string | undefined>("");
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
+
   const form = useForm<SignInFormValues>({
     defaultValues: {
       email: "",
@@ -27,7 +37,18 @@ export function SignInForm() {
   });
 
   const onSubmit = (data: SignInFormValues) => {
-    console.log("Mock submit:", data);
+    setError("");
+    setSuccess("");
+
+    startTransition(() => {
+      login(data).then((res) => {
+        if (res?.error) setError(res.error);
+        if (res?.success) {
+          setSuccess(res.success);
+          router.push("/dashboard");
+        }
+      });
+    });
   };
 
   return (
@@ -63,6 +84,20 @@ export function SignInForm() {
               </FormItem>
             )}
           />
+          {error && (
+            <Alert variant="destructive">
+              <ExclamationTriangleIcon className="h-12 w-12" />
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+          {success && (
+            <Alert>
+              <RocketIcon className="h-6 w-6" />
+              <AlertTitle>Success</AlertTitle>
+              <AlertDescription>{success}</AlertDescription>
+            </Alert>
+          )}
           <Button type="submit" className="w-full">
             Sign In
           </Button>

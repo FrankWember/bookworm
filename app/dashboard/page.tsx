@@ -2,12 +2,22 @@
 
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { Poppins } from "next/font/google";
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  style: ["normal", "italic"],
+});
 
 export default function Home() {
   const router = useRouter();
 
   return (
-    <div className="flex justify-center items-center flex-col gap-10">
+    <div
+      className={`flex justify-center items-center flex-col gap-10 ${poppins.className}`}
+    >
+      <h1 className="text-3xl font-bold">Welcome to Bookworm</h1>
       <Button
         variant="outline"
         size="sm"

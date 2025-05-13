@@ -9,25 +9,54 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime? @map("email_verified")
+  image         String?
+  password      String?
+  Book          Book[]
+  accounts      Account[]
 
-  books     Book[]   // One-to-many: a user can add many books
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
 }
 
 model Book {
-  id              String   @id @default(cuid())
+  id              String    @id @default(cuid())
   title           String
   author          String
   description     String?
   coverImageUrl   String?
   publicationDate DateTime?
   genre           String?
-
   ownerId         String
-  owner           User     @relation(fields: [ownerId], references: [id])
+  owner           User      @relation(fields: [ownerId], references: [id])
 }

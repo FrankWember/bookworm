@@ -13,6 +13,8 @@ type RegisterInput = {
 export const register = async (values: RegisterInput) => {
   const { email, name, password } = values;
 
+  console.log("Registering user:", values);
+
   // Basic validation
   if (!email || !name || !password) {
     return { error: "All fields are required." };

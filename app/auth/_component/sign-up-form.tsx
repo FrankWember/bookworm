@@ -15,6 +15,8 @@ import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import { BeatLoader } from "react-spinners";
 import { register } from "@/actions/register";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { ExclamationTriangleIcon, RocketIcon } from "@radix-ui/react-icons";
 type SignUpFormValues = {
   name: string;
   email: string;
@@ -119,9 +121,20 @@ export function SignUpForm() {
         </form>
       </Form>
 
-      {error && <p className="text-sm text-red-500">{error}</p>}
-      {success && <p className="text-sm text-green-600">{success}</p>}
-
+      {error && (
+        <Alert variant="destructive">
+          <ExclamationTriangleIcon className="h-12 w-12" />
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
+      {success && (
+        <Alert>
+          <RocketIcon className="h-6 w-6" />
+          <AlertTitle>Success</AlertTitle>
+          <AlertDescription>{success}</AlertDescription>
+        </Alert>
+      )}
       <div className="relative">
         <div className="my-6 h-px w-full bg-gray-300"></div>
         <span className="absolute left-1/2 top-[-12px] -translate-x-1/2 bg-white px-2 text-sm text-muted-foreground">
