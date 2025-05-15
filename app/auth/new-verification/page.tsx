@@ -10,6 +10,7 @@ import {
 import Image from "next/image";
 import { Noto_Sans } from "next/font/google";
 import { VerificationForm } from "../_component/new-verification-form";
+import { Suspense } from "react";
 
 const noto = Noto_Sans({
   subsets: ["latin"],
@@ -32,7 +33,11 @@ const VerifyPage = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <VerificationForm />
+            <Suspense
+              fallback={<div className="text-center mt-10">Loading...</div>}
+            >
+              <VerificationForm />
+            </Suspense>
           </CardContent>
         </Card>
       </div>
