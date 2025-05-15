@@ -3,6 +3,8 @@
 import bcrypt from "bcryptjs";
 import { prisma } from "@/prisma/connection";
 import { getUserByEmail } from "@/utils/user";
+import { generateVerificationToken } from "@/lib/token";
+import { sendVerificationEmail } from "@/lib/mail";
 
 type RegisterInput = {
   email: string;
@@ -46,10 +48,10 @@ export const register = async (values: RegisterInput) => {
     },
   });
 
-  //const verificationToken = await generateVerificationToken(email);
-  //await sendVerificationEmail(verificationToken.email, verificationToken.token);
+  const verificationToken = await generateVerificationToken(email);
+  await sendVerificationEmail(verificationToken.email, verificationToken.token);
 
   return {
-    success: "Account created successfully! You may login.",
+    success: "Account created successfully! Confirmation email send.",
   };
 };

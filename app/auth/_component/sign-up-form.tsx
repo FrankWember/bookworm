@@ -147,7 +147,7 @@ export function SignUpForm() {
           <Image src="/google.svg" alt="Google Icon" width={16} height={16} />
           Sign up with Google
         </Button>
-        <Button variant="outline" className="flex items-center gap-2 w-full">
+        {/* <Button variant="outline" className="flex items-center gap-2 w-full">
           <Image
             src="/facebook.svg"
             alt="Facebook Icon"
@@ -155,7 +155,7 @@ export function SignUpForm() {
             height={16}
           />
           Sign up with Facebook
-        </Button>
+        </Button> */}
       </div>
     </div>
   );

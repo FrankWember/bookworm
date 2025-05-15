@@ -8,11 +8,17 @@ datasource db {
   url      = env("POSTGRES_PRISMA_URL")
 }
 
+enum Role {
+  USER
+  ADMIN
+}
+
 model User {
   id            String    @id @default(cuid())
   name          String?
   email         String?   @unique
   emailVerified DateTime? @map("email_verified")
+  roles         Role @default(USER)
   image         String?
   password      String?
   Book          Book[]
@@ -41,12 +47,11 @@ model Account {
 }
 
 model VerificationToken {
-  identifier String
+  id        String    @id @default(cuid())
+  email      String
   token      String
   expires    DateTime
-
-  @@unique([identifier, token])
-  @@map("verification_tokens")
+  @@unique([email, token])
 }
 
 model Book {

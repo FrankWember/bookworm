@@ -12,12 +12,15 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
-import { useState, useTransition } from "react";
+import { use, useState, useTransition } from "react";
 import { login } from "@/actions/login";
 import { BeatLoader } from "react-spinners";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { ExclamationTriangleIcon, RocketIcon } from "@radix-ui/react-icons";
+import { signIn } from "next-auth/react";
+import { DEFAULT_SIGNIN_REDIRECT } from "@/constants/routes";
+
 type SignInFormValues = {
   email: string;
   password: string;
@@ -35,6 +38,16 @@ export function SignInForm() {
       password: "",
     },
   });
+  const onClick = (provider = "google") => {
+    signIn(provider, {
+      callbackUrl: DEFAULT_SIGNIN_REDIRECT,
+    });
+  };
+  const searchParams = useSearchParams();
+  const urlError =
+    searchParams.get("error") === "OAuthAccountNotLinked"
+      ? "Email already in used with a different provider"
+      : null;
 
   const onSubmit = (data: SignInFormValues) => {
     setError("");
@@ -45,7 +58,6 @@ export function SignInForm() {
         if (res?.error) setError(res.error);
         if (res?.success) {
           setSuccess(res.success);
-          router.push("/dashboard");
         }
       });
     });
@@ -84,11 +96,11 @@ export function SignInForm() {
               </FormItem>
             )}
           />
-          {error && (
+          {(error || urlError) && (
             <Alert variant="destructive">
               <ExclamationTriangleIcon className="h-12 w-12" />
               <AlertTitle>Error</AlertTitle>
-              <AlertDescription>{error}</AlertDescription>
+              <AlertDescription>{error || urlError}</AlertDescription>
             </Alert>
           )}
           {success && (
@@ -101,6 +113,15 @@ export function SignInForm() {
           <Button type="submit" className="w-full">
             Sign In
           </Button>
+          <div className="flex items-center">
+            <Button
+              variant="link"
+              className="text-xs underline"
+              onClick={() => router.push("/auth/forgot-password")}
+            >
+              Forgot password?
+            </Button>
+          </div>
         </form>
       </Form>
 
@@ -114,18 +135,13 @@ export function SignInForm() {
 
       {/* OAuth Buttons (UI only) */}
       <div className="flex flex-col gap-3">
-        <Button variant="outline" className="flex items-center gap-2 w-full">
+        <Button
+          variant="outline"
+          className="flex items-center gap-2 w-full"
+          onClick={() => onClick("google")}
+        >
           <Image src="/google.svg" alt="Google Icon" width={16} height={16} />
           Sign in with Google
-        </Button>
-        <Button variant="outline" className="flex items-center gap-2 w-full">
-          <Image
-            src="/facebook.svg"
-            alt="Facebook Icon"
-            width={16}
-            height={16}
-          />
-          Sign in with Facebook
         </Button>
       </div>
     </div>

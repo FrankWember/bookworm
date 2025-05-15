@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Poppins } from "next/font/google";
+import { signOut } from "next-auth/react"; // ✅ Import signOut
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -18,6 +19,7 @@ export default function Home() {
       className={`flex justify-center items-center flex-col gap-10 ${poppins.className}`}
     >
       <h1 className="text-3xl font-bold">Welcome to Bookworm</h1>
+
       <Button
         variant="outline"
         size="sm"
@@ -25,6 +27,7 @@ export default function Home() {
       >
         Sign In (sm)
       </Button>
+
       <Button
         variant="destructive"
         size="lg"
@@ -32,6 +35,7 @@ export default function Home() {
       >
         Sign In (large)
       </Button>
+
       <Button
         variant="ghost"
         size="lg"
@@ -39,6 +43,7 @@ export default function Home() {
       >
         Sign Up (ghost)
       </Button>
+
       <Button
         variant="link"
         size="lg"
@@ -46,8 +51,18 @@ export default function Home() {
       >
         Sign Up (link)
       </Button>
+
       <Button variant="myButton" onClick={() => router.push("/auth/signup")}>
         Custom Signup
+      </Button>
+
+      {/* ✅ Sign Out button */}
+      <Button
+        variant="secondary"
+        size="lg"
+        onClick={() => signOut({ callbackUrl: "/auth/signin" })}
+      >
+        Sign Out
       </Button>
     </div>
   );
