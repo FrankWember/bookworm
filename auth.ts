@@ -52,7 +52,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       const user = await getUserById(token.sub);
       if (!user) return token;
 
-      token.role = user.role;
+      token.role = user.roles;
       return token;
     },
   },
