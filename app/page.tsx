@@ -44,45 +44,45 @@ export default function BookwormLandingPage() {
       </header>
 
       {/* Backdrop Section */}
-      <div className="relative w-full justify-center items-center min-h-[60vh] overflow-hidden">
-        <div className="relative w-full aspect-[16/9]">
-          <Image
-            src="/hero-backdrop.jpg"
-            alt="Backdrop"
-            fill
-            priority
-            className="object-cover brightness-35"
-          />
-        </div>
+      <div className="relative w-full h-[80vh] sm:h-[60vh]">
+        <Image
+          src="/hero-backdrop.jpg"
+          alt="Backdrop"
+          fill
+          priority
+          className="object-cover brightness-35"
+        />
 
         {/* Overlay content */}
-        <div className="absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center z-10">
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 z-10">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9 }}
-            className="max-w-3xl text-center px-6"
+            className="w-full max-w-xl"
           >
-            <h1 className="text-5xl font-bold tracking-tight text-white mb-6">
+            <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-white mb-4">
               Discover, Connect & Share
             </h1>
-            <p className="text-2xl text-gray-200 mb-8">
+            <p className="text-lg sm:text-2xl text-gray-200 mb-6">
               Bookworm is the social space for book lovers. Share reviews, track
               your reading, and meet others who vibe with your shelf.
             </p>
 
             <Card className="shadow-xl">
-              <CardContent className="p-6">
-                <p className="text-lg font-medium mb-4">Join the waitlist</p>
-                <div className="flex gap-2">
+              <CardContent className="p-4 sm:p-6">
+                <p className="text-md sm:text-lg font-medium mb-3">
+                  Join the waitlist
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3">
                   <Input
                     type="email"
                     placeholder="Enter your email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="flex-1"
+                    className="w-full"
                   />
-                  <Button className="px-6">Notify Me</Button>
+                  <Button className="w-full sm:w-auto px-6">Notify Me</Button>
                 </div>
               </CardContent>
             </Card>
@@ -91,7 +91,7 @@ export default function BookwormLandingPage() {
       </div>
 
       {/* Pain Journey Section */}
-      <section className="mt-25 max-w-6xl space-y-24">
+      <section className="mt-20 w-full max-w-6xl px-4 space-y-24">
         <ContentBlock
           imgSrc="/lonely-reader.png"
           title="Reading feels isolating"
@@ -187,17 +187,15 @@ function Feature({
   return (
     <motion.div
       whileHover={{ scale: 1.05 }}
-      className="bg-white p-2 rounded-2xl shadow-md border border-gray-200 text-left flex flex-col items-center transition-transform duration-300"
+      className="bg-white p-6 rounded-2xl shadow-md border border-gray-200 text-left flex flex-col items-center transition-transform duration-300"
     >
-      {/* Parent container with defined height */}
-      <div className="relative w-full h-64 mb-4">
-        <Image
-          src={imgSrc}
-          alt={title}
-          fill
-          className="rounded-xl object-cover"
-        />
-      </div>
+      <Image
+        src={imgSrc}
+        alt={title}
+        width={600}
+        height={400}
+        className="rounded-xl object-cover mb-4"
+      />
       <h3 className="text-xl font-semibold mb-2">{title}</h3>
       <p className="text-gray-600 text-sm text-center">{desc}</p>
     </motion.div>
