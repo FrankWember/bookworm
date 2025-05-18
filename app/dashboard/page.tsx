@@ -8,6 +8,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useState } from "react";
+type ReviewCardProps = {
+  user: string;
+  book: string;
+  review: string;
+  image: string;
+};
 
 export default function BookwormHomePage() {
   return (
@@ -93,7 +99,7 @@ export default function BookwormHomePage() {
   );
 }
 
-function ReviewCard({ user, book, review, image }) {
+function ReviewCard({ user, book, review, image }: ReviewCardProps) {
   return (
     <Card className="rounded-xl overflow-hidden shadow-md p-0">
       <div className="w-full h-[320px] relative">
