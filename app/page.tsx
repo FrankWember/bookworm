@@ -3,14 +3,48 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { startTransition, useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { waitlist } from "@/actions/waitlist";
+import { useForm } from "react-hook-form";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "@/components/ui/form";
 
 export default function BookwormLandingPage() {
-  const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const router = useRouter();
+
+  // Clear error after a seconds
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => setError(""), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
+
+  // Initialize react-hook-form
+  const form = useForm<{ email: string }>({
+    defaultValues: { email: "" },
+  });
+
+  const handleWaitlistSubmit = (data: { email: string }) => {
+    setError("");
+    startTransition(() => {
+      waitlist(data.email).then((res) => {
+        if (res?.error) setError(res.error);
+        if (res?.success) setSuccess(res.success);
+      });
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#f9f7ed] to-[#dadad3] flex flex-col items-center">
@@ -68,22 +102,42 @@ export default function BookwormLandingPage() {
               Bookworm is the social space for book lovers. Share reviews, track
               your reading, and meet others who vibe with your shelf.
             </p>
-
-            <Card className="shadow-xl">
-              <CardContent className="p-4 sm:p-6">
-                <p className="text-md sm:text-lg font-medium mb-3">
-                  Join the waitlist
-                </p>
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <Input
-                    type="email"
-                    placeholder="Enter your email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full"
-                  />
-                  <Button className="w-full sm:w-auto px-6">Notify Me</Button>
-                </div>
+            <Card className="bg-white/90 shadow-lg flex flex-1 p-4 rounded-lg">
+              <CardContent className="py-2">
+                <Form {...form}>
+                  <form
+                    onSubmit={form.handleSubmit(handleWaitlistSubmit)}
+                    className="space-y-4"
+                  >
+                    <div className="flex gap-2 items-end mb-6">
+                      <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem className="flex-1 ">
+                            <FormLabel className="justify-center text-xl font-semibold ">
+                              Join the waitlist
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                type="email"
+                                placeholder="Enter your email"
+                                {...field}
+                                className="w-full "
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <Button type="submit" className="h-8 justify-center">
+                        Join The Waitlist
+                      </Button>
+                    </div>
+                    {error && <div className="text-red-500">{error}</div>}
+                    {success && <div className="text-green-600">{success}</div>}
+                  </form>
+                </Form>
               </CardContent>
             </Card>
           </motion.div>
@@ -91,7 +145,7 @@ export default function BookwormLandingPage() {
       </div>
 
       {/* Pain Journey Section */}
-      <section className="mt-20 w-full max-w-6xl px-4 space-y-24">
+      <section className="mt-10 w-full max-w-6xl px-4 space-y-24">
         <ContentBlock
           imgSrc="/lonely-reader.png"
           title="Reading feels isolating"
@@ -119,16 +173,16 @@ export default function BookwormLandingPage() {
             This is where Bookworm steps in.
           </h2>
           <p className="text-lg text-gray-700">
-            On Bookworm, you can connect with people who vibe with your taste,
-            see what your friends are reading, and chat about the stories you
-            love. AI-powered recommendations—based on your shelf, your friends’,
-            and your past reads—make discovery feel personal, not random.
+            Bookworm connects you with people who share your taste in books. See
+            what friends are reading, chat about books you love, and get
+            AI-powered reading recommendations based on your shelf, your
+            friends’, and your reading history.
           </p>
         </motion.div>
       </section>
 
       {/* Feature Section */}
-      <section className="mt-28 w-full max-w-6xl px-4">
+      <section className="mt-28 w-full max-w-6xl px-2">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -146,6 +200,7 @@ export default function BookwormLandingPage() {
             desc="Log your reads, jot down notes, and stay motivated."
             imgSrc="/track-books.png"
           />
+
           <Feature
             title="Smart Discovery"
             desc="Get book AI recommendations tailored to your exact taste."
@@ -166,8 +221,8 @@ export default function BookwormLandingPage() {
           Your reading journey deserves more.
         </h2>
         <p className="text-lg text-gray-700 mb-6">
-          Bookworm isn’t just another book app. It’s your reading companion,
-          your friends, your bookshelf — all in one.
+          Bookworm is your reading companion, your friends, and your bookshelf —
+          all in one.
         </p>
         <Button className="px-6 py-3 text-lg mb-10">Get Early Access</Button>
       </motion.div>
@@ -187,16 +242,14 @@ function Feature({
   return (
     <motion.div
       whileHover={{ scale: 1.05 }}
-      className="bg-white p-6 rounded-2xl shadow-md border border-gray-200 text-left flex flex-col items-center transition-transform duration-300"
+      className="bg-white p-3 rounded-2xl shadow-md border border-gray-200 text-left flex flex-col items-center transition-transform duration-300 max-h-[420px]"
     >
-      <Image
-        src={imgSrc}
-        alt={title}
-        width={600}
-        height={400}
-        className="rounded-xl object-cover mb-4"
-      />
-      <h3 className="text-xl font-semibold mb-2">{title}</h3>
+      {/* Fixed-height image container */}
+      <div className="w-full h-72 relative rounded-xl overflow-hidden mb-4">
+        <Image src={imgSrc} alt={title} fill className="object-cover" />
+      </div>
+
+      <h3 className="text-xl font-semibold mb-2 text-center">{title}</h3>
       <p className="text-gray-600 text-sm text-center">{desc}</p>
     </motion.div>
   );

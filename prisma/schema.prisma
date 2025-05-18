@@ -66,3 +66,13 @@ model Book {
   ownerId         String
   owner           User      @relation(fields: [ownerId], references: [id])
 }
+
+model Waitlist {
+  id        String    @id @default(cuid())
+  email     String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([email])
+  @@map("waitlist")
+}
